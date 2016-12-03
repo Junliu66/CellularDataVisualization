@@ -138,6 +138,8 @@ public class GraphView extends JPanel{
 	public void paintComponent(Graphics g2d){
 		super.paintComponent(g2d);
 		int count = 0;
+		double tempX = 0;
+		double tempY = 0;
 		
 		// Draw two lines represent x and y axis
 		g2d.drawLine(30, 520, 660, 520);
@@ -157,9 +159,11 @@ public class GraphView extends JPanel{
 				int yearValue = currentSubscriptionYear.getYear();
 				double subscriptionValue = currentSubscriptionYear.getSubscriptions();
 				
+				
 				// Calculate the relative coordiantes in the map by calling the map() method
 				double x = map((double)yearValue, dataMinX, dataMaxX, plottedXmin, plottedXmax);
 				double y = map(subscriptionValue, dataMinY, dataMaxY, plottedYmin, plottedYmax);
+											
 				
 				g2d.setFont(font); // Set the font for the text
 				
@@ -176,6 +180,16 @@ public class GraphView extends JPanel{
 				g2d.setColor(current.getColor());// Set the current color in the linked list
 				g2d.fillOval((int)x,(int)y, POINT_SIZE, POINT_SIZE); // Use a filled color circle to represent the data
 				g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
+				
+				// Draw the line to connect each point
+				if (tempX != 0 && tempY != 0 ){
+					if (x > tempX) {
+						g2d.setColor(current.getColor());
+				        g2d.drawLine((int)tempX, (int)tempY, (int)x, (int)y);
+					}				
+				}				
+				tempX = x;
+				tempY = y;
 			}
 			count++; 
 		}
