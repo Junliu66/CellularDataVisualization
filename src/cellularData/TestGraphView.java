@@ -18,16 +18,12 @@ import javax.swing.border.BevelBorder;
  */
 public class TestGraphView 
 {
-	private final int FRAME_WIDTH = 800;
-	private final int FRAME_HEIGHT = 600;
+	protected final int FRAME_WIDTH = 800;
+	protected final int FRAME_HEIGHT = 600;
+	int requestedSize;
 
-	/**
-	 * Builds a list of countries to debug.
-	 */
-	private void debugListOfCountries(Country [] allCountries)
-	{
-		// TODO: The purpose is to help you debug
-		// Note: The implementation of method is optional.
+	public TestGraphView(){
+		
 	}
 
 	/**
@@ -49,6 +45,7 @@ public class TestGraphView
 				"5");
 
 		int requestedSize = Integer.parseInt(userInput);
+		this.requestedSize = requestedSize;
 
 		// Build the list out of a random selection of countries.
 		Random random = new Random();
@@ -92,6 +89,8 @@ public class TestGraphView
 	 */
 	private void initializeGui(LinkedList<Country> selectedCountries)
 	{
+		TestGraphView obj = new TestGraphView();
+		
 		JFrame frame = new JFrame("Cellular Graph");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -117,17 +116,21 @@ public class TestGraphView
 		LegendPanel legendPanel = new LegendPanel(myPlots.getColor(),selectedCountries); 
 		legendPanel.setBorder(new BevelBorder(BevelBorder.RAISED)); // 	Set bevel border for the legend pane
 		legendPanel.add(new JLabel("Legend")); // Add label to the legend panel
+		//legendPanel.addMouseListener(new MouseHoverOverCountry());
 		
 		// Construct a scroll panel and add legendPanel to the scroll panel as a component
 		JScrollPane scrollLegend = new JScrollPane(legendPanel);
 		scrollLegend.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Set vertical scroll bar policy
 		scrollLegend.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);// Set horizontal scroll bar policy
 		scrollLegend.setPreferredSize(new Dimension(100,580)); // Set preferred scroll panel dimension
-		legendPanel.setPreferredSize(new Dimension(120,myPlots.getCount() * 125 + 100)); // Set preferred original panel dimension
+		legendPanel.setPreferredSize(new Dimension(120,myPlots.getCount() * 100 + 100)); // Set preferred original panel dimension
 		scrollLegend.setViewportView(legendPanel);
+		
+		legendPanel.addMouseMotionListener(new MouseHoverOverCountry(frame, selectedCountries, myPlots));
 		
 		// add the legend panel to your frame
 		frame.add(scrollLegend);
+		
 
 		// Setup the frame to view.
 		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);

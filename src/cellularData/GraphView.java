@@ -32,6 +32,7 @@ public class GraphView extends JPanel{
 	private double dataMaxY;
 	public LinkedList<Color> colorList; // randomly generate color and store in the LinkedList
 	int count;
+	String currentCountryName;
 	
 	/**
 	 * Construct a GraphView constructor to set the width and height of the GraphView panel
@@ -103,6 +104,10 @@ public class GraphView extends JPanel{
 		}
 	}
 	
+	public void setPaintCountryName(String currentCountryName){
+		this.currentCountryName = currentCountryName;
+	}
+	
 	/**
 	 * Accessor method to return the size of the colorList
 	 * @return       the size of colorList
@@ -138,6 +143,8 @@ public class GraphView extends JPanel{
 	public void paintComponent(Graphics g2d){
 		super.paintComponent(g2d);
 		int count = 0;
+		double tempX = 0;
+		double tempY = 0;
 		
 		// Draw two lines represent x and y axis
 		g2d.drawLine(30, 520, 660, 520);
@@ -175,7 +182,19 @@ public class GraphView extends JPanel{
 				
 				g2d.setColor(current.getColor());// Set the current color in the linked list
 				g2d.fillOval((int)x,(int)y, POINT_SIZE, POINT_SIZE); // Use a filled color circle to represent the data
-				g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
+				
+				if(currentCountry.getName() == this.currentCountryName){ // Judging whether mouse hover over
+					g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
+				}
+				
+				/*if (tempX != 0 && tempY != 0 ){
+					if (x > tempX) {
+						g2d.setColor(current.getColor());
+				        g2d.drawLine((int)tempX + 3, (int)tempY + 3, (int)x + 3, (int)y + 3);
+					}				
+				}				
+				tempX = x;
+				tempY = y;*/
 			}
 			count++; 
 		}
