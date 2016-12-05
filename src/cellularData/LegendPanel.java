@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 public class LegendPanel extends JPanel {
 	LinkedList<Color> countryColor;
 	LinkedList<Country> countries;
-	int count;
+	private int count;
 	
 	/**
 	 * Construct LegendPanel constructor to store the linked list for both the countries and color list
@@ -24,7 +24,9 @@ public class LegendPanel extends JPanel {
 	public LegendPanel(LinkedList<Color> colors, LinkedList<Country> countries){
 		this.countryColor = colors;
 		this.countries = countries;
+		repaint();
 	}
+
 	
 	/**
 	 * A method form JComponent to draw the LegendPanel panel and add components to it 
@@ -41,13 +43,13 @@ public class LegendPanel extends JPanel {
 			Country currentCountry = iterator.next(); // Get the current Country obejct in the linked list
 			
 			g2d.setColor(currentColor); // Set the color corresponding to the linked list
-			g2d.drawRoundRect(5, 70 + 125 * count, 25, 25, 10, 10); // Draw a rounded rectangle
-			g2d.fillRoundRect(5, 70 + 125 * count, 25, 25, 10, 10);	// Fill the rounded rectangle with the current color
+			g2d.drawRoundRect(5, 70 + 100 * count, 25, 25, 10, 10); // Draw a rounded rectangle
+			g2d.fillRoundRect(5, 70 + 100 * count, 25, 25, 10, 10);	// Fill the rounded rectangle with the current color
 			
 			// Add the label with the name of the current countries next to the rounded rectangle
 			Font font = new Font("Serif", Font.PLAIN, 10);
 			g2d.setFont(font);
-			g2d.drawString(currentCountry.getName(), 34, 85 + 125 * count);
+			g2d.drawString(currentCountry.getName(), 34, 85 + 100 * count);
 			count++;
 		}
 	}

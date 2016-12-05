@@ -1,6 +1,5 @@
 package cellularData;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -32,6 +31,7 @@ public class GraphView extends JPanel{
 	private double dataMaxY;
 	public LinkedList<Color> colorList; // randomly generate color and store in the LinkedList
 	int count;
+	String currentCountryName;
 	
 	/**
 	 * Construct a GraphView constructor to set the width and height of the GraphView panel
@@ -103,6 +103,10 @@ public class GraphView extends JPanel{
 		}
 	}
 	
+	public void setPaintCountryName(String currentCountryName){
+		this.currentCountryName = currentCountryName;
+	}
+	
 	/**
 	 * Accessor method to return the size of the colorList
 	 * @return       the size of colorList
@@ -159,11 +163,9 @@ public class GraphView extends JPanel{
 				int yearValue = currentSubscriptionYear.getYear();
 				double subscriptionValue = currentSubscriptionYear.getSubscriptions();
 				
-				
 				// Calculate the relative coordiantes in the map by calling the map() method
 				double x = map((double)yearValue, dataMinX, dataMaxX, plottedXmin, plottedXmax);
 				double y = map(subscriptionValue, dataMinY, dataMaxY, plottedYmin, plottedYmax);
-											
 				
 				g2d.setFont(font); // Set the font for the text
 				
@@ -179,17 +181,19 @@ public class GraphView extends JPanel{
 				
 				g2d.setColor(current.getColor());// Set the current color in the linked list
 				g2d.fillOval((int)x,(int)y, POINT_SIZE, POINT_SIZE); // Use a filled color circle to represent the data
-				g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
 				
-				// Draw the line to connect each point
-				if (tempX != 0 && tempY != 0 ){
+				if(currentCountry.getName() == this.currentCountryName){ // Judging whether mouse hover over
+					g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
+				}
+				
+				/*if (tempX != 0 && tempY != 0 ){
 					if (x > tempX) {
 						g2d.setColor(current.getColor());
-				        g2d.drawLine((int)tempX, (int)tempY, (int)x, (int)y);
+				        g2d.drawLine((int)tempX + 3, (int)tempY + 3, (int)x + 3, (int)y + 3);
 					}				
 				}				
 				tempX = x;
-				tempY = y;
+				tempY = y;*/
 			}
 			count++; 
 		}
@@ -208,4 +212,3 @@ public class GraphView extends JPanel{
 		g2d.drawString("Number of Subscriptions (per 100 people)", 15, (plottedYmin - plottedYmax)/3 );
 	}
 }
-
