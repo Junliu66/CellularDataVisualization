@@ -1,9 +1,13 @@
 package cellularData;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -74,8 +78,7 @@ public class TestGraphView
 				}
 			}
 		}
-		
-		System.out.println(selectedCountries.size());
+
 		return selectedCountries;
 	}
 
@@ -108,7 +111,31 @@ public class TestGraphView
 		myPlots.setBorder(new BevelBorder(BevelBorder.RAISED));		// Set bevel border for the GraphView panel
 		myPlots.add(new JLabel("Graph View"));	// Add label to the panel
 		myPlots.setPreferredSize(new Dimension(680,580)); // Set a preferred size for the panel
-		// add the GraphView object to the frame
+
+		myPlots.addMouseMotionListener(new MouseHoverOverData(frame, myPlots));
+		
+		
+		// Add a "Help" button to give user instructions how to compare countries
+		JButton bt = new JButton("Help");
+		bt.setBounds(200, 200, 25, 40);
+		
+		bt.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog (null, "Click countries you would like to see in the legend section\nCountries arrange in alphabetical order\n (Single click to select country, double click to deselect)", "How to get total subscription years and compare", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		
+		JButton bt2 = new JButton("Calculating Total Subscriptions");
+		bt.setBounds(200, 200, 25, 40);
+		
+		bt2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog (null, "Click different countries to see the total subscriptions \n Single click to select country \n Double click to deselect", "How to get total subscription years and compare", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		
+		myPlots.add(bt);
+		myPlots.add(bt2);
 		frame.add(myPlots);
 
 
@@ -127,10 +154,9 @@ public class TestGraphView
 		scrollLegend.setViewportView(legendPanel);
 		
 		legendPanel.addMouseMotionListener(new MouseHoverOverCountry(frame, selectedCountries, myPlots));
-		
+		legendPanel.addMouseListener(new MouseClickCountry(frame, selectedCountries, myPlots));
 		// add the legend panel to your frame
 		frame.add(scrollLegend);
-		
 
 		// Setup the frame to view.
 		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
