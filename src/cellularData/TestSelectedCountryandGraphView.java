@@ -43,6 +43,9 @@ public class TestSelectedCountryandGraphView {
 		//       width and height of the panel.
 
 		//Draw the legend panel
+		JLabel lb = new JLabel("Single Click to Select, Double Click to Deselect");
+		lb.setHorizontalAlignment(JLabel.CENTER);
+		firstFrame.add(lb, BorderLayout.NORTH);
 		
 		ShowCountryPanelForFirstFrame showCountryPanel = new ShowCountryPanelForFirstFrame(); 
 		showCountryPanel.setBorder(new BevelBorder(BevelBorder.RAISED)); // 	Set bevel border for the legend pane
