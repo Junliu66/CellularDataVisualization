@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
+import javax.swing.*;
+import java.util.Iterator;
 
 /**
  * Construct the LegendPanel class to print the LegendPanel panel

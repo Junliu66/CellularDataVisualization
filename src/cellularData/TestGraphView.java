@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,48 +36,13 @@ public class TestGraphView
 	 */
 	private LinkedList<Country> buildCountryList(Country [] allCountries)
 	{	
-		JFrame frame = new JFrame("Cellular Graph");
-
-		String userInput = (String)JOptionPane.showInputDialog(
-				frame,
-				"Enter the number of countries to graph:\n",
-				"Input",
-				JOptionPane.PLAIN_MESSAGE,
-				null,
-				null,
-				"5");
-
-		int requestedSize = Integer.parseInt(userInput);
-		this.requestedSize = requestedSize;
-
-		// Build the list out of a random selection of countries.
-		Random random = new Random();
 		
-		// A singly linked list of country data.
-		int[] traverse = new int[requestedSize];
 		LinkedList<Country> selectedCountries = new LinkedList<Country>();
-		for (int i = 0; i < requestedSize; i++)
+		for (int i = 0; i < allCountries.length; i++)
 		{
-			int selectedIndex = random.nextInt(allCountries.length);
-			
-			// Guarantee that no two same Country object store in the linked list
-			traverse[i] = selectedIndex;
-			if (i == 0){
-				selectedCountries.add(allCountries[selectedIndex]);
-			}
-			else {
-				for (int j = 0; j < i; j++){
-					if (traverse[j] != selectedIndex){
-						if(j == i - 1)
-							selectedCountries.add(allCountries[selectedIndex]);
-					}
-					else{
-						break;
-					}
-				}
-			}
+				selectedCountries.add(allCountries[i]);
 		}
-
+		System.out.println(allCountries.length);
 		return selectedCountries;
 	}
 
@@ -92,8 +56,7 @@ public class TestGraphView
 	 */
 	private void initializeGui(LinkedList<Country> selectedCountries)
 	{
-		TestGraphView obj = new TestGraphView();
-		
+
 		JFrame frame = new JFrame("Cellular Graph");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -200,16 +163,6 @@ public class TestGraphView
 		{
 			int numberOfYears = yearLabels.length;   
 
-			// TODO: Initially convert your CountryList to a generic LinkedList and make sure that list builds 
-			// 		 correctly using the original Country constructor which takes the numberOfYears to setup
-			// 		 the array of subscriptions.
-			// NOTE: Once you've verified that your generic LinkedList builds correctly,
-			//       make sure to comment the line below before submitting.
-			//current = new Country(countryNames[countryIndex], numberOfYears);		// version 1
-
-			// TODO: Once you are successful in creating a generic LinkedList of countries, create a
-			// 		 LinkedList of SubscriptionYear in the Country class.
-			// 	     So, your Country class should no longer have an array of SubscriptionYear objects.
 			current = new Country(countryNames[countryIndex]);	// version 2 and final version of Country constructor
 
 			// Go through each year of cellular data read from the CSV file.
@@ -227,12 +180,7 @@ public class TestGraphView
 		// Creates an object of our current application.		
 		TestGraphView application = new TestGraphView();
 
-		// TODO: Initially, to test your output you may hard-code the number of 
-		//       countries added, and the array positions selected.
-		//		 However, make sure to comment this out before submitting your work.
-		//application.debugListOfCountries(countries);
-
-		// Tests the generic LinkedList class by adding a random number of entries
+		// Tests the generic LinkedList class by adding a all entries
 		// from the array of Country objects.
 		LinkedList<Country> listOfCountries = application.buildCountryList(countries);
 
