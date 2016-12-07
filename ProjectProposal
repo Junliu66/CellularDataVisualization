@@ -1,0 +1,25 @@
+Project Proposal
+Team 03
+
+Part A
+
+     The goal of our project is to use graph and data to show the cellular data subscriptions of different 
+countries in different years. We want to put several countries in one graph and display the subscriptions 
+in each year. The user is able to compare the data between each country and also know the increasing or 
+decreasing trend of the country. Our project consists of two panels. One is called GraphView which stores
+the country data and another is called Legend which shows corresponding color and country name graphed in 
+the GraphView Panel. The paintComponent() method in each class add the components to the panel.
+
+     Based on the last assignment, we are planning to add two features to make our project more user friendly.
+1) Hover Over : First, we will try to add MouseHoverOverData.java class. When the mouse hover over the data 
+   point in the graph, the user could see the label of the subscription in that year. Second, we will also 
+   try to add MouseHoverOverCountry.java class. When the mouse hover over the country in LegendPanel, the user
+   could see the label of all the subscription year for that country. 
+3) Compare data by Click: we will try to compare the data of two countries using CompareTwoCountry.java.
+   When the users click the two countries they want to compare, the graph will show the data of two countries.
+
+
+Part B
+
+     Please see the Storyboard attached.
+     
