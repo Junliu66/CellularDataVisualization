@@ -4,12 +4,15 @@ package cellularData;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.Random;
-
+import java.awt.BorderLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *  *  Tests the GraphView class by creating an object of type GraphView and adding components to it.
@@ -19,14 +22,11 @@ import javax.swing.border.BevelBorder;
  */
 public class TestGraphView 
 {
-	protected final int FRAME_WIDTH = 800;
-	protected final int FRAME_HEIGHT = 600;
-	int requestedSize;
+	
 
-	public TestGraphView(){
-		
-	}
-
+    public TestGraphView() {
+    	
+    }
 	/**
 	 * Creates a generic linked list. Then based on the user's input,
 	 * adds a random number of countries to the list.
@@ -34,53 +34,78 @@ public class TestGraphView
 	 */
 	private LinkedList<Country> buildCountryList(Country [] allCountries)
 	{	
-		JFrame frame = new JFrame("Cellular Graph");
-
-		String userInput = (String)JOptionPane.showInputDialog(
-				frame,
-				"Enter the number of countries to graph:\n",
-				"Input",
-				JOptionPane.PLAIN_MESSAGE,
-				null,
-				null,
-				"5");
-
-		int requestedSize = Integer.parseInt(userInput);
-		this.requestedSize = requestedSize;
-
-		// Build the list out of a random selection of countries.
-		Random random = new Random();
 		
-		// A singly linked list of country data.
-		int[] traverse = new int[requestedSize];
+
+		
 		LinkedList<Country> selectedCountries = new LinkedList<Country>();
-		for (int i = 0; i < requestedSize; i++)
+		for (int i = 0; i < allCountries.length; i++)
 		{
-			int selectedIndex = random.nextInt(allCountries.length);
 			
-			// Guarantee that no two same Country object store in the linked list
-			traverse[i] = selectedIndex;
-			if (i == 0){
-				selectedCountries.add(allCountries[selectedIndex]);
-			}
-			else {
-				for (int j = 0; j < i; j++){
-					if (traverse[j] != selectedIndex){
-						if(j == i - 1)
-							selectedCountries.add(allCountries[selectedIndex]);
-					}
-					else{
-						break;
-					}
-				}
-			}
-		}
-		
-		System.out.println(selectedCountries.size());
+				selectedCountries.add(allCountries[i]);
+			
+		}	
 		return selectedCountries;
 	}
+	
+	private void initializeFirstFrame(LinkedList<Country> selectedCountries) {
+        //TestGraphView obj = new TestGraphView();
+		
+		JFrame frame = new JFrame("Select Countries");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		BorderLayout myLayout = new BorderLayout();
+		frame.setLayout(myLayout);
+		FirstFrameForSelectCountry listOfCountries = new FirstFrameForSelectCountry (selectedCountries);
+		listOfCountries.setBorder(new BevelBorder(BevelBorder.RAISED)); // 	Set bevel border for the legend pane
+		listOfCountries.add(new JLabel("Country List")); // Add label to the legend panel
+		JScrollPane scrollLegend = new JScrollPane(listOfCountries);
+		scrollLegend.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Set vertical scroll bar policy
+		scrollLegend.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);// Set horizontal scroll bar policy
+		scrollLegend.setPreferredSize(new Dimension(195,600)); // Set preferred scroll panel dimension
+		listOfCountries.setPreferredSize(new Dimension(200, listOfCountries.getCount()* 20  )); // Set preferred original panel dimension
+		scrollLegend.setViewportView(listOfCountries);
+		
+		
+		//listOfCountries.addMouseListener(new MouseHoverOverCountry(frame, selectedCountries, listOfCountries));
+		
+		// add the legend panel to your frame
+		frame.add(scrollLegend);
+		
+        frame.add(scrollLegend, BorderLayout.WEST);
+		
+		FirstFrameForPrintOutCountry myPlots = new FirstFrameForPrintOutCountry(selectedCountries);
+		
+		myPlots.setBorder(new BevelBorder(BevelBorder.RAISED));		// Set bevel border for the GraphView panel
+		//myPlots.add(new JLabel("Country List"));	// Add label to the panel
+		
+		JScrollPane scrollmyPlots = new JScrollPane(myPlots);
+		scrollmyPlots.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Set vertical scroll bar policy
+		scrollmyPlots.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);// Set horizontal scroll bar policy
+		scrollmyPlots.setPreferredSize(new Dimension(195,500)); // Set preferred scroll panel dimension
+		myPlots.setPreferredSize(new Dimension(200,5450)); // Set preferred original panel dimension
+		scrollmyPlots.setViewportView(myPlots);
 
+		myPlots.addMouseListener(new FirstFrameMouseListener(frame, listOfCountries, selectedCountries));
 
+		frame.add(scrollmyPlots, BorderLayout.EAST);
+
+		JButton bt = new JButton("Done");
+		frame.add(bt,BorderLayout.SOUTH);
+		
+		bt.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				frame.dispose();
+				new InitializeSecondFrame(listOfCountries.getSelectedCountryList());
+			}
+		});
+		
+		frame.setSize(400, 600);
+		frame.setResizable(false);
+		frame.setVisible(true);	
+	}
+
+public class InitializeSecondFrame{
+    LinkedList<Country> selectedCountries;
+    JFrame secondFrame = new JFrame("Cellular Graph");
 	/**
 	 * Initializes the GUI with two JPanels and populates them.
 	 * One panel draws the data points, the second draws the legend.
@@ -88,16 +113,18 @@ public class TestGraphView
 	 *
 	 * Note: You may add as many panels as you see fit.
 	 */
-	private void initializeGui(LinkedList<Country> selectedCountries)
+	public InitializeSecondFrame(LinkedList<Country> selectedCountries)
 	{
-		TestGraphView obj = new TestGraphView();
+		final int FRAME_WIDTH = 800;
+		final int FRAME_HEIGHT = 600;
 		
-		JFrame frame = new JFrame("Cellular Graph");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.selectedCountries = selectedCountries;
+		//JFrame frame = new JFrame("Cellular Graph");
+		secondFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//Set Flowlayout for the frame
 		FlowLayout myLayout = new FlowLayout();
-		frame.setLayout(myLayout);
+		secondFrame.setLayout(myLayout);
 
 		//  Specify the size of your graph view based on your other panels
 		int graph_panel_size = FRAME_WIDTH;
@@ -109,10 +136,23 @@ public class TestGraphView
 		myPlots.setBorder(new BevelBorder(BevelBorder.RAISED));		// Set bevel border for the GraphView panel
 		myPlots.add(new JLabel("Graph View"));	// Add label to the panel
 		myPlots.setPreferredSize(new Dimension(680,580)); // Set a preferred size for the panel
-		// add the GraphView object to the frame
-		frame.add(myPlots);
 
-
+		myPlots.addMouseMotionListener(new MouseHoverOverData(secondFrame, myPlots));
+		
+		
+		// Add a "Help" button to give user instructions how to compare countries
+		JButton bt = new JButton("Help");
+		bt.setBounds(200, 200, 25, 40);
+		
+		bt.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog (null, "Click countries you would like to see in the legend section\nCountries arrange in alphabetical order\n (Single click to select country, double click to deselect)", "How to get total subscription years and compare", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		
+		myPlots.add(bt);
+		secondFrame.add(myPlots);
+		
 		// Draw the legend panel
 		LegendPanel legendPanel = new LegendPanel(myPlots.getColor(),selectedCountries); 
 		legendPanel.setBorder(new BevelBorder(BevelBorder.RAISED)); // 	Set bevel border for the legend pane
@@ -127,17 +167,17 @@ public class TestGraphView
 		legendPanel.setPreferredSize(new Dimension(120,myPlots.getCount() * 100 + 100)); // Set preferred original panel dimension
 		scrollLegend.setViewportView(legendPanel);
 		
-		legendPanel.addMouseMotionListener(new MouseHoverOverCountry(frame, selectedCountries, myPlots));
-		
+		legendPanel.addMouseMotionListener(new MouseHoverOverCountry(secondFrame, selectedCountries, myPlots));
+		legendPanel.addMouseListener(new MouseClickCountry(secondFrame, selectedCountries, myPlots));
 		// add the legend panel to your frame
-		frame.add(scrollLegend);
+		secondFrame.add(scrollLegend);
 		
-
-		// Setup the frame to view.
-		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		frame.setResizable(false);
-		frame.setVisible(true);	
+		
+		secondFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		secondFrame.setResizable(false);
+		secondFrame.setVisible(true);	
 	}
+}
 
 	/**
 	 * Uses a CSV to parse a CSV file.
@@ -212,7 +252,7 @@ public class TestGraphView
 		LinkedList<Country> listOfCountries = application.buildCountryList(countries);
 
 		// Create graphical representation of our data.
-		application.initializeGui(listOfCountries);
+		application.initializeFirstFrame(listOfCountries);
 
 		// flush the error stream
 		System.err.flush();
@@ -220,3 +260,4 @@ public class TestGraphView
 		System.out.println("\nDone with TestGraphView.");
 	}
 }
+

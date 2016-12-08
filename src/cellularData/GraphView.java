@@ -1,11 +1,11 @@
 package cellularData;
 
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.geom.AffineTransform;
 import javax.swing.*;
-import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -32,6 +32,10 @@ public class GraphView extends JPanel{
 	public LinkedList<Color> colorList; // randomly generate color and store in the LinkedList
 	int count;
 	String currentCountryName;
+	LinkedList<String> clickCountryList;
+	String hoverOverSingleName;
+	double hoverOverMappedX = 0;
+	double hoverOverMappedY = 0;
 	
 	/**
 	 * Construct a GraphView constructor to set the width and height of the GraphView panel
@@ -50,6 +54,7 @@ public class GraphView extends JPanel{
 		plottedYmin = h - 80;
 		plottedYmax = 30;
 		colorList = new LinkedList<Color>(); // initiate the colorList linked list to store the random color
+		this.clickCountryList = new LinkedList<String>();
 		
 		setDataAndColor(); // call the method to find the max value and min value of the data year and subscription in the map
 	}
@@ -105,6 +110,66 @@ public class GraphView extends JPanel{
 	
 	public void setPaintCountryName(String currentCountryName){
 		this.currentCountryName = currentCountryName;
+	}
+	
+	public void setSinglePaintCountryName(String singlePaintCountryName){
+		this.hoverOverSingleName = singlePaintCountryName;
+	}
+	
+	
+	public boolean isEmptyClick(){
+		java.util.Iterator<String> iterator = clickCountryList.iterator();
+		return !iterator.hasNext();
+	}
+	
+	public boolean isExistCountry(String name){
+		java.util.Iterator<String> iterator = clickCountryList.iterator();
+		while(iterator.hasNext()){
+			String temp = iterator.next();
+			if (temp.equals(name)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void addClickCountryName(String currentCountryName){
+		if (isExistCountry(currentCountryName)){
+			clickCountryList.remove(currentCountryName);
+		}
+		else{
+			clickCountryList.add(currentCountryName);
+		}
+	}
+	
+	public boolean mouseXYequalsmappedXY(int mouseX, int mouseY){
+		double x = 0;
+		double y = 0;
+		java.util.Iterator<Country> iterator = countries.iterator();
+		while(iterator.hasNext()){
+			Country currentCountry = iterator.next();
+			
+			java.util.Iterator<SubscriptionYear> subscriptions = currentCountry.subscriptions.iterator();
+			while(subscriptions.hasNext()){
+				SubscriptionYear currentSubscriptionYear = subscriptions.next();
+				int yearValue = currentSubscriptionYear.getYear();
+				double subscriptionValue = currentSubscriptionYear.getSubscriptions();
+				
+				x = map((double)yearValue, this.dataMinX, this.dataMaxX, this.plottedXmin, this.plottedXmax);
+				y = map(subscriptionValue, this.dataMinY, this.dataMaxY, this.plottedYmin, this.plottedYmax);
+				
+				
+				if(mouseX >= (int)x - 7 && mouseX <= (int)x + 7 && mouseY  >= (int)y - 7 && mouseY <= (int)y + 7){
+					this.hoverOverSingleName = currentCountry.getName();
+					this.hoverOverMappedX = x;
+					this.hoverOverMappedY = y;
+					return true;
+				}
+				else{
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -179,21 +244,26 @@ public class GraphView extends JPanel{
 				// Construct a current object with the type ColoredPoinkt
 				ColoredPoint current = new ColoredPoint(currentColor,x,y,yearValue,subscriptionValue);
 				
-				g2d.setColor(current.getColor());// Set the current color in the linked list
-				g2d.fillOval((int)x,(int)y, POINT_SIZE, POINT_SIZE); // Use a filled color circle to represent the data
-				
-				if(currentCountry.getName() == this.currentCountryName){ // Judging whether mouse hover over
-					g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
+				if(isEmptyClick() || isExistCountry(currentCountry.getName())){
+					g2d.setColor(current.getColor());// Set the current color in the linked list
+					g2d.fillOval((int)x,(int)y, POINT_SIZE, POINT_SIZE); // Use a filled color circle to represent the data
+					
+					if(currentCountry.getName() == this.hoverOverSingleName && this.hoverOverMappedX == x && this.hoverOverMappedY == y){
+						g2d.drawString(current.getLabel(), (int)(x - 20), (int)y);
+					}
+					if(currentCountry.getName() == this.currentCountryName){ // Judging whether mouse hover over
+						g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
+					}
+					if (tempX != 0 && tempY != 0 ){
+						if (x > tempX) {
+							g2d.setColor(current.getColor());
+					        g2d.drawLine((int)tempX + 3, (int)tempY + 3, (int)x + 3, (int)y + 3);
+						}				
+					}				
+					tempX = x;
+					tempY = y;
 				}
 				
-				/*if (tempX != 0 && tempY != 0 ){
-					if (x > tempX) {
-						g2d.setColor(current.getColor());
-				        g2d.drawLine((int)tempX + 3, (int)tempY + 3, (int)x + 3, (int)y + 3);
-					}				
-				}				
-				tempX = x;
-				tempY = y;*/
 			}
 			count++; 
 		}
@@ -202,7 +272,7 @@ public class GraphView extends JPanel{
 		g2d.setColor(Color.black); 
 		Font font2 = new Font("Arial", Font.PLAIN, 15); 
 		g2d.setFont(font2);
-		g2d.drawString("Year", (plottedXmax - plottedXmin)/2 + 40, 550); 
+		g2d.drawString("Year", (plottedXmax - plottedXmin)/2 + 40, 545); 
 		
 		// 90 degree rotate the y axis label
 		AffineTransform affineTransform = new AffineTransform(); 

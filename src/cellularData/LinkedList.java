@@ -109,6 +109,26 @@ public class LinkedList<T> implements Iterable<T>{
 		this.length++;
 	}
 	
+	public void remove(T theData){
+		if(this.isEmpty()){
+			return;
+		}
+		
+		Node<T> walker = head;
+		if(walker.getData().equals(theData)){
+			head = head.getNext();
+			return;
+		}
+		
+		while( walker.getNext() != null){
+			if(walker.getNext().getData().equals(theData)){
+				walker.setNext(walker.getNext().getNext());
+				break;
+			}
+			walker = walker.getNext();
+		} 
+	}
+	
 	/**
 	 * This method check if the object can be found in the list. 
 	 * @param toTest      one object represents object to test
