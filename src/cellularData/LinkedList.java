@@ -1,5 +1,6 @@
 package cellularData;
 
+
 import java.util.Iterator;
 
 /**
@@ -107,26 +108,6 @@ public class LinkedList<T> implements Iterable<T>{
 		}
 		current.setNext(newNode);
 		this.length++;
-	}
-	
-	public void remove(T theData){
-		if(this.isEmpty()){
-			return;
-		}
-		
-		Node<T> walker = head;
-		if(walker.getData().equals(theData)){
-			head = head.getNext();
-			return;
-		}
-		
-		while( walker.getNext() != null){
-			if(walker.getNext().getData().equals(theData)){
-				walker.setNext(walker.getNext().getNext());
-				break;
-			}
-			walker = walker.getNext();
-		} 
 	}
 	
 	/**
