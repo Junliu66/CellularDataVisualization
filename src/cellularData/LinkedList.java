@@ -109,6 +109,10 @@ public class LinkedList<T> implements Iterable<T>{
 		this.length++;
 	}
 	
+	/**
+	 * This method remove a specific node in the list
+	 * @param theData		the object that is going to remove
+	 */
 	public void remove(T theData){
 		if(this.isEmpty()){
 			return;

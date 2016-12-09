@@ -108,31 +108,52 @@ public class GraphView extends JPanel{
 		}
 	}
 	
+	/**
+	 * Mutator method to set the data name when hover over the country in legend panel
+	 * @param currentCountryName	the country name that mouse hovered over
+	 */
 	public void setPaintCountryName(String currentCountryName){
 		this.currentCountryName = currentCountryName;
 	}
 	
+	/**
+	 * Mutator method to set the data name when hover over the specific dots
+	 * @param singlePaintCountryName	the country name which mouse hover over the dots
+	 */
 	public void setSinglePaintCountryName(String singlePaintCountryName){
 		this.hoverOverSingleName = singlePaintCountryName;
 	}
 	
-	
+	/**
+	 * Accessor method to judge whether the clicked country list is empty
+	 * @return		true if the clicked country list is empty
+	 */
 	public boolean isEmptyClick(){
 		java.util.Iterator<String> iterator = clickCountryList.iterator();
 		return !iterator.hasNext();
 	}
 	
+	/**
+	 * Accessor method to judge whether the clicked country is already in the list
+	 * @param name		The name of the country clicked
+	 * @return		true if the clicked country is already existed
+	 */
 	public boolean isExistCountry(String name){
 		java.util.Iterator<String> iterator = clickCountryList.iterator();
 		while(iterator.hasNext()){
 			String temp = iterator.next();
-			if (temp.equals(name)){
+			if (temp.equals(name)){ // judge whether the name clicked is same with the name in the list
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	/**
+	 * Mutator method to add the country to the list if clicked country is not in the list
+	 * And remove the country if it is not in the list
+	 * @param currentCountryName	the name of the clicked country
+	 */
 	public void addClickCountryName(String currentCountryName){
 		if (isExistCountry(currentCountryName)){
 			clickCountryList.remove(currentCountryName);
@@ -142,6 +163,12 @@ public class GraphView extends JPanel{
 		}
 	}
 	
+	/**
+	 * Accessor method decide which country and specific data the mouse hovered over
+	 * @param mouseX		the x pixels that the mouse hovered over
+	 * @param mouseY		the y pixels that the mouse hovered over
+	 * @return		true if the mouse hovered over the specific dots in the graph panel
+	 */
 	public boolean mouseXYequalsmappedXY(int mouseX, int mouseY){
 		double x = 0;
 		double y = 0;
@@ -158,8 +185,7 @@ public class GraphView extends JPanel{
 				x = map((double)yearValue, this.dataMinX, this.dataMaxX, this.plottedXmin, this.plottedXmax);
 				y = map(subscriptionValue, this.dataMinY, this.dataMaxY, this.plottedYmin, this.plottedYmax);
 				
-				
-				if(mouseX >= (int)x - 7 && mouseX <= (int)x + 7 && mouseY  >= (int)y - 7 && mouseY <= (int)y + 7){
+				if(mouseX >= (int)x - 7 && mouseX <= (int)x + 7 && mouseY  >= (int)y - 7 && mouseY <= (int)y + 7){// Give more range sensitivity when hover over the specific data 
 					this.hoverOverSingleName = currentCountry.getName();
 					this.hoverOverMappedX = x;
 					this.hoverOverMappedY = y;
@@ -223,6 +249,7 @@ public class GraphView extends JPanel{
 			
 			java.util.Iterator<SubscriptionYear> iterator1 = currentCountry.subscriptions.iterator();
 			Color currentColor = iterator2.next(); // Get the current color in the linked list
+			int count1 = 0;
 			while(iterator1.hasNext()){
 				SubscriptionYear currentSubscriptionYear = iterator1.next();
 				int yearValue = currentSubscriptionYear.getYear();
@@ -238,22 +265,29 @@ public class GraphView extends JPanel{
 				if(count == 0){
 					g2d.setColor(Color.black);
 					g2d.drawLine((int)x, 520, (int)x, 516);
+					if(count1 % 5 == 0){
 					g2d.drawString(String.valueOf(yearValue), (int)(x - 10), 530);
+					}
+					count1++;
 				}
 				
 				// Construct a current object with the type ColoredPoinkt
 				ColoredPoint current = new ColoredPoint(currentColor,x,y,yearValue,subscriptionValue);
 				
-				if(isEmptyClick() || isExistCountry(currentCountry.getName())){
+				// Judge if the new clicked or hover list is empty or in the list
+				if(isEmptyClick() || isExistCountry(currentCountry.getName())){ //print the country list if it is empty or hovered over or clicked
 					g2d.setColor(current.getColor());// Set the current color in the linked list
 					g2d.fillOval((int)x,(int)y, POINT_SIZE, POINT_SIZE); // Use a filled color circle to represent the data
 					
+					// whether the mouse is hovered over the specific dots in GraphView panel
 					if(currentCountry.getName() == this.hoverOverSingleName && this.hoverOverMappedX == x && this.hoverOverMappedY == y){
-						g2d.drawString(current.getLabel(), (int)(x - 20), (int)y);
+						g2d.drawString(current.getLabel(), (int)(x - 20), (int)y);// Add label to the data
 					}
-					if(currentCountry.getName() == this.currentCountryName){ // Judging whether mouse hover over
+					// whether the place mouse hovered over is the country needed to draw
+					if(currentCountry.getName() == this.currentCountryName){ 
 						g2d.drawString(current.getLabel(), (int)(x - 20), (int)y); // Add label to the data
 					}
+					// draw lines in between dots and generate the line graph
 					if (tempX != 0 && tempY != 0 ){
 						if (x > tempX) {
 							g2d.setColor(current.getColor());
