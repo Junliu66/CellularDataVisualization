@@ -117,3 +117,5 @@ did some research online to find examples of and Stella coded for the new frame.
 first frame, which show all the countries and let user select them, we need to connect two frame. We found some 
 examples of connecting frames and chose a best way to do that. After doing some small changes we finally made what 
 our project currently looks like.
+examples of connecting frames and chose a best way to do that. After doing some small changes we finally made what 
+our project currently looks like.
