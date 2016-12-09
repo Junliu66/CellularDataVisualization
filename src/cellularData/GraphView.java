@@ -316,4 +316,3 @@ public class GraphView extends JPanel{
 		g2d.drawString("Number of Subscriptions (per 100 people)", 15, (plottedYmin - plottedYmax)/3 );
 	}
 }
-
