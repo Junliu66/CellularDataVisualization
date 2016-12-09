@@ -78,7 +78,7 @@ resources/cellular_short_oneDecade.csv
 resources/RUN1(a).jpg
 resources/RUN1(b).jpg
 resources/RUN2.jpg          
-    - pictures showing first Frame for selecting countries and second Frame for showing graph 
+    - pictures showing first Frame for selecting countries and second Frame for showing graph 
       from CSVReader, SubscriptionYear, Country, CountryNode, CountryList, 
       GraphView, ColoredPoint and LegendPanel, MouseHoverOverData,
       MouseHoverOverCountry, MouseClickCountry, MouseClickCountryForFirstFrame, 
